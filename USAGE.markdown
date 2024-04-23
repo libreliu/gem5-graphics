@@ -41,7 +41,7 @@ clone emerald:
 
 Update your **setEnvironment**, namely set your **CUDAHOME**, **NVIDIA_CUDA_SDK_LOCATION**, **APITRACE_LIB_PATH** (you can ignore M5_PATH for now). 
 
-Your **APITRACE_LIB_PATH** is the path to `apitrace/build/retraces/libglretrace.so`.
+Your **APITRACE_LIB_PATH** is the path to `apitrace/build/retrace/libglretrace.so`.
 
 now source your env
 
@@ -50,7 +50,7 @@ now source your env
 Now build mesa in OGL mode
 
 13. `$ cd mesa`
-14. `$./autogen.sh --enable-gallium-swrast --with-gallium-drivers=swrast --disable-gallium--llvm --disable-dri --disable-gbm --disable-egl` 
+14. `$./autogen.sh --enable-gallium-swrast --with-gallium-drivers=swrast --disable-gallium-llvm --disable-dri --disable-gbm --disable-egl` 
 15. `$ make -j4`
 
 copying libGL (related to some building bug to be fixed)
@@ -63,7 +63,7 @@ Build gem5 with ARM:
 Choose one of gem5 builds (most likely you want debug or opt)
 18. `$ scons build/ARM/gem5.{debug, opt, fast,...}  EXTRAS=../gem5-gpu/src:../gpgpu-sim -j4`
 
-
+scons build/ARM/gem5.debug  EXTRAS=../gem5-gpu/src:../gpgpu-sim -j4
 
 Test your build, try to render a cube trace (download  it from [here](https://drive.google.com/open?id=1q1vdk1beR-4l3oU7VTJAHU3S2dCWHUeJ):
 `$ build/ARM/gem5.debug ../gem5-gpu/configs/example_graphics_standalone.py --gtrace=../example_traces/textured_cube.trace --g_start_frame=2 --g_end_frame=2`
