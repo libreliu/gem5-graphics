@@ -1,21 +1,25 @@
 #!/bin/bash
 
 echo Using MESA+GPGPUSIM!
-#PLEASE CONFIG
-export CUDAHOME= #FIXME
-export M5_PATH= #FIXME
-export NVIDIA_CUDA_SDK_LOCATION= #FIXME
-export APITRACE_LIB_PATH= #FIXME
+EMERALD_ENV_CURRENT_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &>/dev/null && pwd )"
+echo "Script path: ${EMERALD_ENV_CURRENT_PATH}"
 
-export LD_LIBRARY_PATH=$PWD/mesa/lib
-export LD_LIBRARY_PATH=$PWD/mesa/lib/gallium
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PWD/android_libs
+#PLEASE CONFIG
+export CUDAHOME=/opt/cuda
+export M5_PATH= #FIXME
+export NVIDIA_CUDA_SDK_LOCATION=/opt/cuda
+
+export APITRACE_LIB_PATH=${EMERALD_ENV_CURRENT_PATH}/../apitrace/build/retrace/libglretrace.so
+
+export LD_LIBRARY_PATH=${EMERALD_ENV_CURRENT_PATH}/mesa/lib
+export LD_LIBRARY_PATH=${EMERALD_ENV_CURRENT_PATH}/mesa/lib/gallium
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${EMERALD_ENV_CURRENT_PATH}/android_libs
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$CUDAHOME/lib
-export GPGPUSIM_MESA_ROOT=$PWD
+export GPGPUSIM_MESA_ROOT=${EMERALD_ENV_CURRENT_PATH}
 
 #export MESA_GPGPUSIM_DEBUG="$1"
 export PATH=$PATH:$CUDAHOME/bin
-export PATH=$PATH:$PWD/gem5/util/term
+export PATH=$PATH:${EMERALD_ENV_CURRENT_PATH}/gem5/util/term
 export CUDA_INSTALL_PATH=$CUDAHOME
 
 #emulator & mesa flags
@@ -23,10 +27,10 @@ export ANDROID_GL_SOFTWARE_RENDERER=1
 if [ $ANDROID_GL_SOFTWARE_RENDERER -eq 1 ]
 then
   echo "Running in OGLES mode"
-  export LIBGL_DRIVERS_PATH=$PWD/mesa/lib/gallium
-  export ANDROID_EGL_LIB=$PWD/mesa/lib/libEGL.so
+  export LIBGL_DRIVERS_PATH=${EMERALD_ENV_CURRENT_PATH}/mesa/lib/gallium
+  export ANDROID_EGL_LIB=${EMERALD_ENV_CURRENT_PATH}/mesa/lib/libEGL.so
   #export ANDROID_GLESv1_LIB=""
-  export ANDROID_GLESv2_LIB=$PWD/mesa/lib/libGLESv2.so
+  export ANDROID_GLESv2_LIB=${EMERALD_ENV_CURRENT_PATH}/mesa/lib/libGLESv2.so
 else
   echo "Running in OGL mode"
   export LIBGL_DRIVERS_PATH=
