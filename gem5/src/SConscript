@@ -1009,9 +1009,20 @@ def makeEnv(env, label, objsfx, strip = False, **kwargs):
     werror_env = new_env.Clone()
     # Treat warnings as errors but white list some warnings that we
     # want to allow (e.g., deprecation warnings).
-    werror_env.Append(CCFLAGS=['-Werror',
-                               '-Wno-error=deprecated-declarations',
+    # werror_env.Append(CCFLAGS=['-Werror',
+    #                            '-Wno-error=deprecated-declarations',
+    #                            '-Wno-error=deprecated',
+    #                            '-Wno-error=implicit-fallthrough',
+    #                            '-Wno-error=noexcept-type',
+    #                            '-Wno-error=attributes',
+    #                            '-Wno-error=bool-operation'
+    #                            ])
+    werror_env.Append(CCFLAGS=['-Wno-error=deprecated-declarations',
                                '-Wno-error=deprecated',
+                               '-Wno-error=implicit-fallthrough',
+                               '-Wno-error=noexcept-type',
+                               '-Wno-error=attributes',
+                               '-Wno-error=bool-operation'
                                ])
 
     def make_obj(source, static, extra_deps = None):

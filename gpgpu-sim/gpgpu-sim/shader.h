@@ -1350,8 +1350,6 @@ struct shader_core_config : public core_config
 };
 
 struct shader_core_stats_pod {
-
-	void* shader_core_stats_pod_start[]; // DO NOT MOVE FROM THE TOP - spaceless pointer to the start of this structure
 	unsigned long long *shader_cycles;
     unsigned *m_num_sim_insn; // number of scalar thread instructions committed by this shader core
     unsigned *m_num_sim_winsn; // number of warp instructions committed by this shader core
@@ -1430,11 +1428,87 @@ struct shader_core_stats_pod {
 
 class shader_core_stats : public shader_core_stats_pod {
 public:
+    void clear_all() {
+        // Clear shader_core_stats_pod members
+        shader_cycles = 0;
+        m_num_sim_insn = 0;
+        m_num_sim_winsn = 0;
+        m_last_num_sim_insn = 0;
+        m_last_num_sim_winsn = 0;
+        m_num_decoded_insn = 0;
+        m_pipeline_duty_cycle = 0;
+        m_num_FPdecoded_insn = 0;
+        m_num_INTdecoded_insn = 0;
+        m_num_storequeued_insn = 0;
+        m_num_loadqueued_insn = 0;
+        m_num_ialu_acesses = 0;
+        m_num_fp_acesses = 0;
+        m_num_imul_acesses = 0;
+        m_num_tex_inst = 0;
+        m_num_fpmul_acesses = 0;
+        m_num_idiv_acesses = 0;
+        m_num_fpdiv_acesses = 0;
+        m_num_sp_acesses = 0;
+        m_num_sfu_acesses = 0;
+        m_num_trans_acesses = 0;
+        m_num_mem_acesses = 0;
+        m_num_sp_committed = 0;
+        m_num_tlb_hits = 0;
+        m_num_tlb_accesses = 0;
+        m_num_sfu_committed = 0;
+        m_num_mem_committed = 0;
+        m_read_regfile_acesses = 0;
+        m_write_regfile_acesses = 0;
+        m_non_rf_operands = 0;
+        m_num_imul24_acesses = 0;
+        m_num_imul32_acesses = 0;
+        m_active_sp_lanes = 0;
+        m_active_sfu_lanes = 0;
+        m_active_fu_lanes = 0;
+        m_active_fu_mem_lanes = 0;
+        m_n_diverge = 0;
+        gpgpu_n_load_insn = 0;
+        gpgpu_n_store_insn = 0;
+        gpgpu_n_shmem_insn = 0;
+        gpgpu_n_tex_insn = 0;
+        gpgpu_n_const_insn = 0;
+        gpgpu_n_param_insn = 0;
+        gpgpu_n_shmem_bkconflict = 0;
+        gpgpu_n_cache_bkconflict = 0;
+        gpgpu_n_intrawarp_mshr_merge = 0;
+        gpgpu_n_cmem_portconflict = 0;
+        memset(gpu_stall_shd_mem_breakdown, 0, sizeof(gpu_stall_shd_mem_breakdown));
+        gpu_reg_bank_conflict_stalls = 0;
+        shader_cycle_distro = 0;
+        last_shader_cycle_distro = 0;
+        num_warps_issuable = 0;
+        gpgpu_n_stall_shd_mem = 0;
+
+        gpgpu_n_mem_read_local = 0;
+        gpgpu_n_mem_write_local = 0;
+        gpgpu_n_mem_texture = 0;
+        gpgpu_n_mem_const = 0;
+        gpgpu_n_mem_read_global = 0;
+        gpgpu_n_mem_write_global = 0;
+        gpgpu_n_mem_z_write = 0;
+        gpgpu_n_mem_read_inst = 0;
+
+        gpgpu_n_mem_l2_writeback = 0;
+        gpgpu_n_mem_l1_write_allocate = 0;
+        gpgpu_n_mem_l2_write_allocate = 0;
+
+        made_write_mfs = 0;
+        made_read_mfs = 0;
+
+        gpgpu_n_shmem_bank_access = 0;
+        n_simt_to_mem = 0;
+        n_mem_to_simt = 0;
+    }
+
     shader_core_stats( const shader_core_config *config )
     {
         m_config = config;
-        shader_core_stats_pod *pod = reinterpret_cast< shader_core_stats_pod * > ( this->shader_core_stats_pod_start );
-        memset(pod,0,sizeof(shader_core_stats_pod));
+        clear_all();
         shader_cycles=(unsigned long long *) calloc(config->num_shader(),sizeof(unsigned long long ));
         m_num_sim_insn = (unsigned*) calloc(config->num_shader(),sizeof(unsigned));
         m_num_sim_winsn = (unsigned*) calloc(config->num_shader(),sizeof(unsigned));
